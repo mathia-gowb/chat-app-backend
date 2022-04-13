@@ -32,10 +32,7 @@ io.on("connection",(socket)=>{
            clientName:user,
            messages:[{
                messageContent:data.message,
-               sender:{
-                   senderName:user,
-                   admin:false,
-               }
+                isAdmin:false,
            }]
        })
        message.save()
@@ -58,7 +55,7 @@ io.on("connection",(socket)=>{
         messages.findById(data.chatId)
         .then(chat=>{
             if(chat){
-                socket.emit('RETURNED_MESSAGES',chat.messages)
+                io.emit('RETURNED_MESSAGES',chat.messages)
             }
         })
     })
@@ -75,6 +72,17 @@ app.post('/admin',(req,res)=>{
     res.json({"response":"you made request as admin"})
 })
 function handleNewMessage(data){
-    messages.findByIdAndUpdate(data.id,{messages:messages.push(data.message)})
+    let messageFormat={
+        messageContent:data.message,
+         isAdmin:data.admin,
+    }
+    messages.findByIdAndUpdate(data.chatId,{$push:{messages:messageFormat}},(err,chat)=>{
+        if(err){
+            console.log(err)
+        }else{
+            io.emit('RETURNED_MESSAGES',chat.messages)
+        }
+    })
+    
 }
 server.listen(5000,()=>{console.log("Server started on port 5000")})
