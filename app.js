@@ -63,14 +63,19 @@ io.on("connection",(socket)=>{
       //send the instruction to reload the charts list on admin(set users id to object id) & to redirect the user(set id to object id) to /messages
 
 })
-app.get('/api',(req,res)=>{
+app.get('/chats',(req,res)=>{
     //access the database
+    messages.find({},(err,allChats)=>{
+        if(err){
+            console.log(err)
+        }else{
+            res.json(allChats)
+        }
+    })
     //this project uses mongoose local db 
-    res.json({"chats":" adf" })
+    
 })
-app.post('/admin',(req,res)=>{
-    res.json({"response":"you made request as admin"})
-})
+
 function handleNewMessage(data){
     let messageFormat={
         messageContent:data.message,
@@ -83,6 +88,5 @@ function handleNewMessage(data){
             io.emit('RETURNED_MESSAGES',chat.messages)
         }
     })
-    
 }
 server.listen(5000,()=>{console.log("Server started on port 5000")})
