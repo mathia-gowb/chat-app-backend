@@ -37,9 +37,10 @@ io.on("connection",(socket)=>{
        })
        message.save()
        .then(data=>{
+           console.log(data)
            /* the new message event will provide the chat id to the front end and the event will cal the get messages which will return all the messages in that chat */
            io.emit('INITIATE_PRIVATE_CHART',{chatId:data._id});
-           io.emit('DETECT_NEW_MESSAGE',{chatId:data._id});
+           io.emit('DETECT_NEW_MESSAGE',{messages:data.messages});
        })
 
     });
@@ -48,7 +49,7 @@ io.on("connection",(socket)=>{
         handleNewMessage(data);
     })
     socket.on('NEW_ADMIN_MESSAGE',(data)=>{
-
+        handleNewMessage(data)
     })
     socket.on('GET_MESSAGES',(data)=>{
         //the GET_MESSAGES  is fired and it gets all the messages using the id of the prop
@@ -85,6 +86,7 @@ function handleNewMessage(data){
         if(err){
             console.log(err)
         }else{
+            console.log(chat);
             io.emit('RETURNED_MESSAGES',chat.messages)
         }
     })
