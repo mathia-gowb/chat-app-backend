@@ -1,4 +1,3 @@
-
 const handleNewMessage= function (data,messageDocument,IO_Object){
     let messageFormat={
         messageContent:data.message,

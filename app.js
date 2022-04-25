@@ -7,7 +7,6 @@ const {Server}=require("socket.io");
 const cors=require("cors");
 const handleNewMessage =require('./functions/new-message-handler.js');
 
-
 app.use(cors())
 /* Connect to mongoDb */
 mongoose.connect('mongodb://localhost/chatapp');
@@ -33,7 +32,8 @@ io.on("connection",(socket)=>{
        const user=data.name;
        /* check if the current user exists */
        const message=new messages({
-           clientName:user,
+           chatId:data.chatId,
+            clientName:user,
            messages:[{
                messageContent:data.message,
                 isAdmin:false,
@@ -42,7 +42,7 @@ io.on("connection",(socket)=>{
        message.save()
        .then(data=>{
            /* the new message event will provide the chat id to the front end and the event will cal the get messages which will return all the messages in that chat */
-           io.emit('INITIATE_PRIVATE_CHART',{chatId:data._id});
+           io.emit('INITIATE_PRIVATE_CHAT',{chatId:data._id});
            io.emit('DETECT_NEW_CHAT',{messages:data.messages});
        })
     });
