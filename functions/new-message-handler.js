@@ -3,7 +3,8 @@ const handleNewMessage= function (data,messageDocument,IO_Object){
         messageContent:data.message,
          isAdmin:data.admin,
     }
-    messageDocument.findByIdAndUpdate(data.chatId,{$push:{messages:messageFormat}},{ returnOriginal: false },(err,chat)=>{
+
+    messageDocument.findOneAndUpdate({chatId:data.chatId},{$push:{messages:messageFormat}},{ returnOriginal: false },(err,chat)=>{
         if(err){
             console.log(err)
         }else{
