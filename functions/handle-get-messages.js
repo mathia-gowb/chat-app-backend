@@ -7,12 +7,13 @@ function handleGetMessages(data,IO_Object,messageDocument){
         }
     })
 }
-
+//determines which event to emit based on whether the request was sent from admin sidebar or front page
 function handleGetMessagesHelper(IO_Object,data,chatObject){
     if(data.role==='getFirstChatMessages'){
-        IO_Object.emit('RETURNED_MESSAGES',chatObject.messages)
+        IO_Object.emit('RETURNED_MESSAGES',chatObject)
         return
     }else{
+        //if not first chat get messages for chat clicked in frontend
         IO_Object.emit('MESSAGES_FOR_CURRENT_CHAT',chatObject.messages)
     }
 }
