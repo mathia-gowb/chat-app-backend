@@ -33,9 +33,10 @@ io.on("connection",(socket)=>{
        /* check if the current user exists */
        const message=new messages({
            chatId:data.chatId,
+           chatTime:new Date(),
             clientName:user,
            messages:[{
-               messageContent:data.message,
+                messageContent:data.message,
                 isAdmin:false,
            }]
        })
@@ -65,6 +66,7 @@ app.get('/chats',(req,res)=>{
         if(err){
             console.log(err)
         }else{
+            console.log(allChats)
             res.json(allChats)
         }
     })

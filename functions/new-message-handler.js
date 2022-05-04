@@ -3,12 +3,11 @@ const handleNewMessage= function (data,messageDocument,IO_Object){
         messageContent:data.message,
          isAdmin:data.admin,
     }
-    console.log(data,messageDocument)
-    messageDocument.findOneAndUpdate({chatId:data.chatId},{$push:{messages:messageFormat}},{ returnOriginal: false },(err,chat)=>{
+
+    messageDocument.findOneAndUpdate({chatId:data.chatId},{$push:{messages:messageFormat},chatTime:new Date()},{ returnOriginal: false},(err,chat)=>{
         if(err){
             console.log(err)
         }else{
-            console.log(chat,'the last logged object is the message_______--------');
             IO_Object.emit('RETURNED_MESSAGES',chat)
         }
     })
