@@ -34,10 +34,11 @@ io.on("connection",(socket)=>{
        const message=new messages({
            chatId:data.chatId,
            chatTime:new Date(),
-            clientName:user,
+           clientName:user,
            messages:[{
                 messageContent:data.message,
                 isAdmin:false,
+                isUnRead:data.isUnRead
            }]
        })
        message.save()
@@ -59,17 +60,30 @@ io.on("connection",(socket)=>{
         //the GET_MESSAGES  is fired and it gets all the messages using the id of the prop
         handleGetMessages(data,io,messages)
     })
+    socket.on('CHANGE_MESSAGE_STATUS',(data)=>{
+        //change message status for the current chat
+        messages.findOneAndUpdate({chatId:data.chatId,"messages.isUnRead":true},{$set:{"messages.$.isUnRead":false}},(err,chat)=>{
+            if(err){
+                console.log(err)
+            }else{
+                console.log("The chat has been updated")
+            }
+        })
+    })
 })
 app.get('/chats',(req,res)=>{
     //access the database
-    messages.find({},(err,allChats)=>{
+    messages.find({$query:{},$orderby:{chatTime:1}},(err,allChats)=>{
         if(err){
             console.log(err)
         }else{
-            console.log(allChats)
-            res.json(allChats)
+            const sortedMessages=allChats.sort((a,b)=>{
+                return b.chatTime-a.chatTime;
+            });
+            res.json(sortedMessages)
         }
     })
     //this project uses mongoose local db 
 })
+
 server.listen(5000,()=>{console.log("Server started on port 5000")})

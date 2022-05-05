@@ -2,6 +2,7 @@ const handleNewMessage= function (data,messageDocument,IO_Object){
     let messageFormat={
         messageContent:data.message,
          isAdmin:data.admin,
+         isUnRead:data.isUnRead
     }
 
     messageDocument.findOneAndUpdate({chatId:data.chatId},{$push:{messages:messageFormat},chatTime:new Date()},{ returnOriginal: false},(err,chat)=>{

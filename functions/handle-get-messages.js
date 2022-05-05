@@ -1,5 +1,4 @@
 function handleGetMessages(data,IO_Object,messageDocument){
-   console.log(`current chat id is ${data.chatId}`)
     messageDocument.findOne({chatId:data.chatId})
     .then(chat=>{
         if(chat){
