@@ -30,12 +30,14 @@ io.on("connection",(socket)=>{
     socket.on('NEW_CHAT',(data)=>{
         //add the message to the database
        const user=data.name;
+       const currTime=new Date();
        /* check if the current user exists */
        const message=new messages({
            chatId:data.chatId,
-           chatTime:new Date(),
+           chatTime:currTime,
            clientName:user,
            messages:[{
+                messageTime:currTime,
                 messageContent:data.message,
                 isAdmin:false,
                 isUnRead:data.isUnRead

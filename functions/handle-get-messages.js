@@ -13,7 +13,7 @@ function handleGetMessagesHelper(IO_Object,data,chatObject){
         return
     }else{
         //if not first chat get messages for chat clicked in frontend
-        IO_Object.emit('MESSAGES_FOR_CURRENT_CHAT',chatObject.messages)
+        IO_Object.emit('MESSAGES_FOR_CURRENT_CHAT',{messages:chatObject.messages,chatName:chatObject.clientName})
     }
 }
 module.exports = handleGetMessages
